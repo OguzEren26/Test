@@ -1,32 +1,216 @@
-repeat wait() until game:IsLoaded()
-
-local function jumpToServer() 
-local sfUrl = "https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=%s&limit=%s&excludeFullGames=true" 
-local req = request({ Url = string.format(sfUrl, 15588442388, "Desc", 100) }) 
-local body = game:GetService("HttpService"):JSONDecode(req.Body) 
-local deep = math.random(1, 3)
-if deep > 1 then 
-    for i = 1, deep, 1 do 
-        req = request({ Url = string.format(sfUrl .. "&cursor=" .. body.nextPageCursor, 15588442388, "Desc", 100) }) 
-        body = game:GetService("HttpService"):JSONDecode(req.Body) 
-        task.wait(0.1)
-    end 
-end 
-local servers = {} 
-if body and body.data then 
-    for i, v in next, body.data do 
-            if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.id ~= game.JobId then
-                table.insert(servers, 1, v.id)
-            end
+while wait(0.5) do
+  -- Autosell Settings
+  _G.autosell = true
+  _G.testSell = false -- prints out what items would've been sold instead of selling the items
+  _G.keep_items_level_requirement = 220  -- keeps items that level requirements are above this number
+  _G.keep2spells = false -- sell spells extra spells if you have 2 already
+  _G.keep_items_from_class = {
+    ["physical"] = false, 
+    ["mage"] = false,
+  } --[[ only keeps items that fall within the given class ]]
+  _G.keeprarities = {
+    ['legendary'] = true,
+    ['epic'] = false,
+    ['rare'] = false,
+    ['uncommon'] = false,
+    ['common'] = false,
+  }
+  _G.itemlist ={ 
+  
+      -- AV Items,
+    ["Voidborn Warrior Armor"] = {"epic"},
+    ["Voidborn Warrior Helmet"] = {"epic"},
+    ["Voidborn Mage Helmet"] = {"epic"},
+    ["Voidborn Mage Armor"] = {"epic"},
+    -- Legendary Skills,
+    ["Enhanced Inner Rage"] = {"legendary"},
+    ["Enhanced Inner Focus"] = {"legendary"},
+    ["Gravity Leap"] = {"legendary"},
+    ["Unstable Warp"] = {"legendary"},
+    -- Purple Collect,
+    ["Godly Warrior Armor"] = {"epic"},
+    ["Godly Warrior Helmet"] = {"epic"},
+    ["Godly Mage Armor"] = {"epic"},
+    ["Godly Mage Helmet"] = {"epic"},
+    ["Godly Guardian Armor"] = {"epic"},
+    ["Godly Guardian Helmet"] = {"epic"},
+    ["Titan-forged Warrior Armor"] = {"epic"},
+    ["Titan-forged Warrior Helmet"] = {"epic"},
+    ["Titan-forged Mage Armor"] = {"epic"},
+    ["Titan-forged Mage Helmet"] = {"epic"},
+    ["Titan-forged Guardian Helmet"] = {"epic"},
+    ["Titan-forged Guardian Armor"] = {"epic"},
+    ["Glorious Warrior Armor"] = {"epic"},
+    ["Glorious Warrior Helmet"] = {"epic"},
+    ["Glorious Mage Armor"] = {"epic"},
+    ["Glorious Mage Helmet"] = {"epic"},
+    ["Glorious Guardian Armor"] = {"epic"},
+    ["Glorious Guardian Helmet"] = {"epic"},
+    ["Ancestral Warrior Armor"] = {"epic"},
+    ["Ancestral Warrior Helmet"] = {"epic"},
+    ["Ancestral Mage Armor"] = {"epic"},
+    ["Ancestral Mage Helmet"] = {"epic"},
+    ["Ancestral Guardian Helmet"] = {"epic"},
+    ["Ancestral Guardian Armor"] = {"epic"},
+    ["Overlord's Warrior Armor"] = {"epic"},
+    ["Overlord's Warrior Helmet"] = {"epic"},
+    ["Overlord's Mage Armor"] = {"epic"},
+    ["Overlord's Mage Helmet"] = {"epic"},
+    ["Overlord's Guardian Armor"] = {"epic"},
+    ["Overlord's Guardian Helmet"] = {"epic"},
+    ["Mythical Warrior Armor"] = {"epic"},
+    ["Mythical Warrior Helmet"] = {"epic"},
+    ["Mythical Mage Armor"] = {"epic"},
+    ["Mythical Mage Helmet"] = {"epic"},
+    ["Mythical Guardian Helmet"] = {"epic"},
+    ["Mythical Guardian Armor"] = {"epic"},
+    ["War-forged Warrior Armor"] = {"epic"},
+    ["War-forged Warrior Helmet"] = {"epic"},
+    ["War-forged Mage Armor"] = {"epic"},
+    ["War-forged Mage Helmet"] = {"epic"},
+    ["War-forged Guardian Armor"] = {"epic"},
+    ["War-forged Guardian Helmet"] = {"epic"},
+    ["Alien Warrior Armor"] = {"epic"},
+    ["Alien Warrior Helmet"] = {"epic"},
+    ["Alien Mage Armor"] = {"epic"},
+    ["Alien Mage Helmet"] = {"epic"},
+    ["Alien Guardian Helmet"] = {"epic"},
+    ["Alien Guardian Armor"] = {"epic"},
+    ["Lava King's Warrior Armor"] = {"epic"},
+    ["Lava King's Warrior Helmet"] = {"epic"},
+    ["Lava King's Mage Armor"] = {"epic"},
+    ["Lava King's Mage Helmet"] = {"epic"},
+    ["Lava King's Guardian Armor"] = {"epic"},
+    ["Lava King's Guardian Helmet"] = {"epic"},
+    ["Triton Warrior Armor"] = {"epic"},
+    ["Triton Warrior Helmet"] = {"epic"},
+    ["Triton Mage Armor"] = {"epic"},
+    ["Triton Mage Helmet"] = {"epic"},
+    ["Triton Guardian Helmet"] = {"epic"},
+    ["Triton Guardian Armor"] = {"epic"},
+    ["Eldenbark Warrior Armor"] = {"epic"},
+    ["Eldenbark Warrior Helmet"] = {"epic"},
+    ["Eldenbark Mage Armor"] = {"epic"},
+    ["Eldenbark Mage Helmet"] = {"epic"},
+    ["Eldenbark Guardian Helmet"] = {"epic"},
+    ["Eldenbark Guardian Armor"] = {"epic"},
+    ["Valhalla Warrior Armor"] = {"epic"},
+    ["Valhalla Warrior Helmet"] = {"epic"},
+    ["Valhalla Mage Armor"] = {"epic"},
+    ["Valhalla Mage Helmet"] = {"epic"},
+    ["Valhalla Guardian Helmet"] = {"epic"},
+    ["Valhalla Guardian Armor"] = {"epic"},
+    ["Gildenscale Warrior Armor"] = {"epic"},
+    ["Gildenscale Warrior Helmet"] = {"epic"},
+    ["Gildenscale Mage Armor"] = {"epic"},
+    ["Gildenscale Mage Helmet"] = {"epic"},
+    ["Gildenscale Guardian Helmet"] = {"epic"},
+    ["Gildenscale Guardian Armor"] = {"epic"},
+    ["Akuma Warrior Armor"] = {"epic"},
+    ["Akuma Warrior Helmet"] = {"epic"},
+    ["Akuma Mage Armor"] = {"epic"},
+    ["Akuma Mage Helmet"] = {"epic"},
+    ["Akuma Guardian Helmet"] = {"epic"},
+    ["Akuma Guardian Armor"] = {"epic"},
+  } 
+  
+  local function lobbyStrCheck(a, b)
+    local la, lb = string.lower(a), string.lower(b)
+    la = string.gsub(la, "'", "") -- remove ' from item name
+    lb = string.gsub(lb, "'", "") -- remove ' from item name
+    la = string.gsub(la, "s", "") -- remove s from item name
+    lb = string.gsub(lb, "s", "") -- remove s from item name
+    return la == lb
+  end
+  
+  local function checkSell(rare, name) -- vital function
+    for itemName,rareTable in pairs(_G.itemlist) do
+      if lobbyStrCheck(itemName, name) then
+        for _, j in pairs(rareTable) do
+          if rare == j then
+            return false
+          end
         end
+      end
     end
-    local randomCount = #servers
-    if not randomCount then
-        randomCount = 2
+    return not _G.keeprarities[rare]
+  end
+  
+  
+  local function getItemType(v)
+    if v.health == nil then -- is a weapon
+      if v.spellPower < v.physicalDamage then
+        return "physical"
+      else
+        return "mage"
+      end
+    else -- is an armor
+      if v.spellPower > v.physicalPower then
+        return "mage"
+      else
+        return "physical"   
+      end
     end
-    game:GetService("TeleportService"):TeleportToPlaceInstance(15588442388, servers[math.random(1, randomCount)], game:GetService("Players").LocalPlayer) 
-end
-
-while wait(1) do
-    jumpToServer()
+  end
+  
+  local function sell() -- autosell script bring all together
+    if _G.autosell then
+      local tallyList = {}
+      local itemType
+      local gitems = game.ReplicatedStorage.remotes.reloadInvy:InvokeServer()
+      for itemFolderName,itemFolder in pairs(gitems) do
+        if itemFolderName == "weapons" or itemFolderName == "chests" or itemFolderName == "helmets" then
+          for i, item in pairs(itemFolder) do
+            itemType = getItemType(item)
+            local itemTypeCheck = not _G.keep_items_from_class[itemType]
+            if not item.equipped and (checkSell(item.rarity, item.name) and item.levelReq < _G.keep_items_level_requirement and itemTypeCheck) then
+              if itemFolderName == "weapons" then
+                if _G.testSell then
+                  print('Selling: ', item.name)
+                else
+                  game:GetService("ReplicatedStorage").remotes.sellItemEvent:FireServer({ ["ability"]= { }, ["helmet"]= { }, ["chest"]= { }, ["weapon"]= { (tonumber(string.sub(i, 8))) } })
+                end
+              elseif itemFolderName == "chests" then
+                if _G.testSell then
+                  print('Selling: ', item.name)
+                else
+                  game:GetService("ReplicatedStorage").remotes.sellItemEvent:FireServer({ ["ability"]= { }, ["helmet"]= { }, ["chest"]= { (tonumber(string.sub(i, 7))) }, ["weapon"]= { } })
+                end
+              elseif itemFolderName == "helmets" then
+                if _G.testSell then
+                  print('Selling: ', item.name)
+                else
+                  game:GetService("ReplicatedStorage").remotes.sellItemEvent:FireServer({ ["ability"]= { }, ["helmet"]= { (tonumber(string.sub(i, 8))) }, ["chest"]= { }, ["weapon"]= { } })
+                end
+              end
+            end
+          end
+        end
+        if itemFolderName == "abilities" then
+          for i, item in pairs(gitems.abilities) do
+            if tallyList[item.name] then
+              tallyList[item.name] = tallyList[item.name] +1
+            else
+              tallyList[item.name] = 1
+            end
+            if not item.equipped.q and not item.equipped.e then
+              if (checkSell(item.rarity, item.name) and item.levelReq < _G.keep_items_level_requirement) or (((tallyList[item.name] > 2) and _G.keep2spells))  then
+                if _G.testSell then
+                  print('Selling: ', item.name)
+                else
+                  game:GetService("ReplicatedStorage").remotes.sellItemEvent:FireServer({ ["ability"]= {(tonumber(string.sub(i, 9))) }, ["helmet"]= { }, ["chest"]= { }, ["weapon"]= { } })
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+  
+  
+  -- Example of how to call the sell function:
+  while wait(5) do
+    sell()
+  end
 end
