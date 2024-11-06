@@ -15,7 +15,7 @@ while wait(0.5) do
   
   -- Belirli eşya türleri ve nadirliklerini tanımlama
   local sellableItems = {
-      ring = {rarityColors.Common, rarityColors.Uncommon, rarityColors.Rare,
+      ring = {rarityColors.Common, rarityColors.Uncommon, rarityColors.Rare, rarityColors.Epic},
       weapon = {rarityColors.Common, rarityColors.Uncommon, rarityColors.Rare, rarityColors.Epic},
       chest = {rarityColors.Common, rarityColors.Uncommon},
       helmet = {rarityColors.Common, rarityColors.Uncommon},
