@@ -1,216 +1,233 @@
-while wait(0.5) do
-  -- Autosell Settings
-  _G.autosell = true
-  _G.testSell = false -- prints out what items would've been sold instead of selling the items
-  _G.keep_items_level_requirement = 220  -- keeps items that level requirements are above this number
-  _G.keep2spells = false -- sell spells extra spells if you have 2 already
-  _G.keep_items_from_class = {
-    ["physical"] = false, 
-    ["mage"] = false,
-  } --[[ only keeps items that fall within the given class ]]
-  _G.keeprarities = {
-    ['legendary'] = true,
-    ['epic'] = false,
-    ['rare'] = false,
-    ['uncommon'] = false,
-    ['common'] = false,
+local maxLevel = 216
+
+local dungeonLevels = {
+  ["Desert Temple"] = {
+      {level = 1, difficulty = "Easy"},
+      {level = 5, difficulty = "Medium"}, 
+      {level = 15, difficulty = "Hard"}
+  },
+  ["Winter Outpost"] = {
+      {level = 30, difficulty = "Easy"},
+      {level = 40, difficulty = "Medium"},
+      {level = 50, difficulty = "Hard"}
+  },
+  ["Pirate Island"] = {
+      {level = 60, difficulty = "Insane"},
+      {level = 65, difficulty = "Nightmare"}
+  },
+  ["King's Castle"] = {
+      {level = 70, difficulty = "Insane"},
+      {level = 75, difficulty = "Nightmare"}
+  },
+  ["The Underworld"] = {
+      {level = 80, difficulty = "Insane"},
+      {level = 85, difficulty = "Nightmare"}
+  },
+  ["Samurai Palace"] = {
+      {level = 90, difficulty = "Insane"},
+      {level = 95, difficulty = "Nightmare"}
+  },
+  ["The Canals"] = {
+      {level = 100, difficulty = "Insane"},
+      {level = 105, difficulty = "Nightmare"}
+  },
+  ["Ghastly Harbor"] = {
+      {level = 110, difficulty = "Insane"},
+      {level = 115, difficulty = "Nightmare"}
+  },
+  ["Steampunk Sewers"] = {
+      {level = 120, difficulty = "Insane"},
+      {level = 125, difficulty = "Nightmare"}
+  },
+  ["Orbital Outpost"] = {
+      {level = 135, difficulty = "Insane"},
+      {level = 140, difficulty = "Nightmare"}
+  },
+  ["Volcanic Chambers"] = {
+      {level = 150, difficulty = "Insane"},
+      {level = 155, difficulty = "Nightmare"}
+  },
+  ["Aquatic Temple"] = {
+      {level = 160, difficulty = "Insane"},
+      {level = 165, difficulty = "Nightmare"}
+  },
+  ["Enchanted Forest"] = {
+      {level = 170, difficulty = "Insane"},
+      {level = 175, difficulty = "Nightmare"}
+  },
+  ["Northern Lands"] = {
+      {level = 180, difficulty = "Insane"},
+      {level = 185, difficulty = "Nightmare"}
+  },
+  ["Glided Skies"] = {
+      {level = 190, difficulty = "Insane"},
+      {level = 195, difficulty = "Nightmare"}
+  },
+  ["Yokai Peak"] = {
+      {level = 200, difficulty = "Insane"},
+      {level = 205, difficulty = "Nightmare"}
+  },
+  ["Abyssal Void"] = {
+      {level = 210, difficulty = "Insane"},
+      {level = 215, difficulty = "Nightmare"}
   }
-  _G.itemlist ={ 
-  
-      -- AV Items,
-    ["Voidborn Warrior Armor"] = {"epic"},
-    ["Voidborn Warrior Helmet"] = {"epic"},
-    ["Voidborn Mage Helmet"] = {"epic"},
-    ["Voidborn Mage Armor"] = {"epic"},
-    -- Legendary Skills,
-    ["Enhanced Inner Rage"] = {"legendary"},
-    ["Enhanced Inner Focus"] = {"legendary"},
-    ["Gravity Leap"] = {"legendary"},
-    ["Unstable Warp"] = {"legendary"},
-    -- Purple Collect,
-    ["Godly Warrior Armor"] = {"epic"},
-    ["Godly Warrior Helmet"] = {"epic"},
-    ["Godly Mage Armor"] = {"epic"},
-    ["Godly Mage Helmet"] = {"epic"},
-    ["Godly Guardian Armor"] = {"epic"},
-    ["Godly Guardian Helmet"] = {"epic"},
-    ["Titan-forged Warrior Armor"] = {"epic"},
-    ["Titan-forged Warrior Helmet"] = {"epic"},
-    ["Titan-forged Mage Armor"] = {"epic"},
-    ["Titan-forged Mage Helmet"] = {"epic"},
-    ["Titan-forged Guardian Helmet"] = {"epic"},
-    ["Titan-forged Guardian Armor"] = {"epic"},
-    ["Glorious Warrior Armor"] = {"epic"},
-    ["Glorious Warrior Helmet"] = {"epic"},
-    ["Glorious Mage Armor"] = {"epic"},
-    ["Glorious Mage Helmet"] = {"epic"},
-    ["Glorious Guardian Armor"] = {"epic"},
-    ["Glorious Guardian Helmet"] = {"epic"},
-    ["Ancestral Warrior Armor"] = {"epic"},
-    ["Ancestral Warrior Helmet"] = {"epic"},
-    ["Ancestral Mage Armor"] = {"epic"},
-    ["Ancestral Mage Helmet"] = {"epic"},
-    ["Ancestral Guardian Helmet"] = {"epic"},
-    ["Ancestral Guardian Armor"] = {"epic"},
-    ["Overlord's Warrior Armor"] = {"epic"},
-    ["Overlord's Warrior Helmet"] = {"epic"},
-    ["Overlord's Mage Armor"] = {"epic"},
-    ["Overlord's Mage Helmet"] = {"epic"},
-    ["Overlord's Guardian Armor"] = {"epic"},
-    ["Overlord's Guardian Helmet"] = {"epic"},
-    ["Mythical Warrior Armor"] = {"epic"},
-    ["Mythical Warrior Helmet"] = {"epic"},
-    ["Mythical Mage Armor"] = {"epic"},
-    ["Mythical Mage Helmet"] = {"epic"},
-    ["Mythical Guardian Helmet"] = {"epic"},
-    ["Mythical Guardian Armor"] = {"epic"},
-    ["War-forged Warrior Armor"] = {"epic"},
-    ["War-forged Warrior Helmet"] = {"epic"},
-    ["War-forged Mage Armor"] = {"epic"},
-    ["War-forged Mage Helmet"] = {"epic"},
-    ["War-forged Guardian Armor"] = {"epic"},
-    ["War-forged Guardian Helmet"] = {"epic"},
-    ["Alien Warrior Armor"] = {"epic"},
-    ["Alien Warrior Helmet"] = {"epic"},
-    ["Alien Mage Armor"] = {"epic"},
-    ["Alien Mage Helmet"] = {"epic"},
-    ["Alien Guardian Helmet"] = {"epic"},
-    ["Alien Guardian Armor"] = {"epic"},
-    ["Lava King's Warrior Armor"] = {"epic"},
-    ["Lava King's Warrior Helmet"] = {"epic"},
-    ["Lava King's Mage Armor"] = {"epic"},
-    ["Lava King's Mage Helmet"] = {"epic"},
-    ["Lava King's Guardian Armor"] = {"epic"},
-    ["Lava King's Guardian Helmet"] = {"epic"},
-    ["Triton Warrior Armor"] = {"epic"},
-    ["Triton Warrior Helmet"] = {"epic"},
-    ["Triton Mage Armor"] = {"epic"},
-    ["Triton Mage Helmet"] = {"epic"},
-    ["Triton Guardian Helmet"] = {"epic"},
-    ["Triton Guardian Armor"] = {"epic"},
-    ["Eldenbark Warrior Armor"] = {"epic"},
-    ["Eldenbark Warrior Helmet"] = {"epic"},
-    ["Eldenbark Mage Armor"] = {"epic"},
-    ["Eldenbark Mage Helmet"] = {"epic"},
-    ["Eldenbark Guardian Helmet"] = {"epic"},
-    ["Eldenbark Guardian Armor"] = {"epic"},
-    ["Valhalla Warrior Armor"] = {"epic"},
-    ["Valhalla Warrior Helmet"] = {"epic"},
-    ["Valhalla Mage Armor"] = {"epic"},
-    ["Valhalla Mage Helmet"] = {"epic"},
-    ["Valhalla Guardian Helmet"] = {"epic"},
-    ["Valhalla Guardian Armor"] = {"epic"},
-    ["Gildenscale Warrior Armor"] = {"epic"},
-    ["Gildenscale Warrior Helmet"] = {"epic"},
-    ["Gildenscale Mage Armor"] = {"epic"},
-    ["Gildenscale Mage Helmet"] = {"epic"},
-    ["Gildenscale Guardian Helmet"] = {"epic"},
-    ["Gildenscale Guardian Armor"] = {"epic"},
-    ["Akuma Warrior Armor"] = {"epic"},
-    ["Akuma Warrior Helmet"] = {"epic"},
-    ["Akuma Mage Armor"] = {"epic"},
-    ["Akuma Mage Helmet"] = {"epic"},
-    ["Akuma Guardian Helmet"] = {"epic"},
-    ["Akuma Guardian Armor"] = {"epic"},
-  } 
-  
-  local function lobbyStrCheck(a, b)
-    local la, lb = string.lower(a), string.lower(b)
-    la = string.gsub(la, "'", "") -- remove ' from item name
-    lb = string.gsub(lb, "'", "") -- remove ' from item name
-    la = string.gsub(la, "s", "") -- remove s from item name
-    lb = string.gsub(lb, "s", "") -- remove s from item name
-    return la == lb
-  end
-  
-  local function checkSell(rare, name) -- vital function
-    for itemName,rareTable in pairs(_G.itemlist) do
-      if lobbyStrCheck(itemName, name) then
-        for _, j in pairs(rareTable) do
-          if rare == j then
-            return false
-          end
-        end
-      end
-    end
-    return not _G.keeprarities[rare]
-  end
-  
-  
-  local function getItemType(v)
-    if v.health == nil then -- is a weapon
-      if v.spellPower < v.physicalDamage then
-        return "physical"
-      else
-        return "mage"
-      end
-    else -- is an armor
-      if v.spellPower > v.physicalPower then
-        return "mage"
-      else
-        return "physical"   
-      end
-    end
-  end
-  
-  local function sell() -- autosell script bring all together
-    if _G.autosell then
-      local tallyList = {}
-      local itemType
-      local gitems = game.ReplicatedStorage.remotes.reloadInvy:InvokeServer()
-      for itemFolderName,itemFolder in pairs(gitems) do
-        if itemFolderName == "weapons" or itemFolderName == "chests" or itemFolderName == "helmets" then
-          for i, item in pairs(itemFolder) do
-            itemType = getItemType(item)
-            local itemTypeCheck = not _G.keep_items_from_class[itemType]
-            if not item.equipped and (checkSell(item.rarity, item.name) and item.levelReq < _G.keep_items_level_requirement and itemTypeCheck) then
-              if itemFolderName == "weapons" then
-                if _G.testSell then
-                  print('Selling: ', item.name)
-                else
-                  game:GetService("ReplicatedStorage").remotes.sellItemEvent:FireServer({ ["ability"]= { }, ["helmet"]= { }, ["chest"]= { }, ["weapon"]= { (tonumber(string.sub(i, 8))) } })
-                end
-              elseif itemFolderName == "chests" then
-                if _G.testSell then
-                  print('Selling: ', item.name)
-                else
-                  game:GetService("ReplicatedStorage").remotes.sellItemEvent:FireServer({ ["ability"]= { }, ["helmet"]= { }, ["chest"]= { (tonumber(string.sub(i, 7))) }, ["weapon"]= { } })
-                end
-              elseif itemFolderName == "helmets" then
-                if _G.testSell then
-                  print('Selling: ', item.name)
-                else
-                  game:GetService("ReplicatedStorage").remotes.sellItemEvent:FireServer({ ["ability"]= { }, ["helmet"]= { (tonumber(string.sub(i, 8))) }, ["chest"]= { }, ["weapon"]= { } })
-                end
-              end
-            end
-          end
-        end
-        if itemFolderName == "abilities" then
-          for i, item in pairs(gitems.abilities) do
-            if tallyList[item.name] then
-              tallyList[item.name] = tallyList[item.name] +1
-            else
-              tallyList[item.name] = 1
-            end
-            if not item.equipped.q and not item.equipped.e then
-              if (checkSell(item.rarity, item.name) and item.levelReq < _G.keep_items_level_requirement) or (((tallyList[item.name] > 2) and _G.keep2spells))  then
-                if _G.testSell then
-                  print('Selling: ', item.name)
-                else
-                  game:GetService("ReplicatedStorage").remotes.sellItemEvent:FireServer({ ["ability"]= {(tonumber(string.sub(i, 9))) }, ["helmet"]= { }, ["chest"]= { }, ["weapon"]= { } })
-                end
-              end
-            end
-          end
-        end
-      end
-    end
-  end
-  
-  
-  -- Example of how to call the sell function:
-  while wait(5) do
-    sell()
-  end
+}
+
+repeat wait() until game:IsLoaded()
+wait()
+
+local Players = game:GetService("Players")
+local TeleportService = game:GetService("TeleportService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local player = Players.LocalPlayer
+local desiredPlaceID = 2414851778
+local saveFolder = "kisave"
+
+if not isfolder(saveFolder) then
+   makefolder(saveFolder)
 end
+
+local function saveCurrentLevel(level)
+   writefile(saveFolder .. "/current_level.txt", tostring(level))
+end
+
+local function getSavedLevel()
+   if isfile(saveFolder .. "/current_level.txt") then
+       return tonumber(readfile(saveFolder .. "/current_level.txt"))
+   end
+   error("Script stopped")
+end
+
+local function saveCurrentDungeon(dungeon)
+   writefile(saveFolder .. "/current_dungeon.txt", dungeon)
+end
+
+local function getSavedDungeon()
+   if isfile(saveFolder .. "/current_dungeon.txt") then
+       return readfile(saveFolder .. "/current_dungeon.txt")
+   end
+   error("Script stopped")
+end
+
+local function saveCurrentDifficulty(difficulty)
+   writefile(saveFolder .. "/current_difficulty.txt", difficulty)
+end
+
+local function getSavedDifficulty()
+   if isfile(saveFolder .. "/current_difficulty.txt") then
+       return readfile(saveFolder .. "/current_difficulty.txt")
+   end
+   error("Script stopped")
+end
+
+local function getCurrentLevel()
+   repeat wait() until player:FindFirstChild("leaderstats")
+   local leaderstats = player.leaderstats
+   local levelValue = leaderstats:WaitForChild("Level")
+   
+   if not levelValue then
+       error("Script stopped")
+   end
+   
+   return levelValue.Value
+end
+
+local function getDungeonAndDifficultyForLevel(currentLevel)
+   if not currentLevel then
+       error("Script stopped")
+   end
+   
+   if currentLevel >= maxLevel then
+       player:Kick("Max level reached")
+       return
+   end
+   
+   local bestDungeon = nil
+   local bestDifficulty = nil
+   local smallestDiff = math.huge
+   
+   for dungeonName, difficulties in pairs(dungeonLevels) do
+       for _, difficultyData in ipairs(difficulties) do
+           if currentLevel >= difficultyData.level then
+               local levelDiff = currentLevel - difficultyData.level
+               if levelDiff < smallestDiff then
+                   smallestDiff = levelDiff
+                   bestDungeon = dungeonName
+                   bestDifficulty = difficultyData.difficulty
+               end
+           end
+       end
+   end
+   
+   if bestDungeon and bestDifficulty then
+       return bestDungeon, bestDifficulty
+   end
+   
+   error("Script stopped")
+end
+
+local function shouldTeleportToLobby(currentLevel, currentDungeon, currentDifficulty)
+   if not currentDungeon or not currentDifficulty then
+       error("Script stopped")
+   end
+   
+   local savedDungeon = getSavedDungeon()
+   local savedDifficulty = getSavedDifficulty()
+   
+   if savedDungeon ~= currentDungeon or savedDifficulty ~= currentDifficulty then
+       saveCurrentDungeon(currentDungeon)
+       saveCurrentDifficulty(currentDifficulty)
+       return true
+   end
+   return false
+end
+
+local function createDungeon(dungeon, difficulty)
+   if not dungeon or not difficulty then
+       error("Script stopped")
+   end
+   
+   local args = {
+       [1] = dungeon,
+       [2] = difficulty,
+       [3] = 0,
+       [4] = false,
+       [5] = false,
+       [6] = false
+   }
+   
+   ReplicatedStorage:WaitForChild("remotes"):WaitForChild("createLobby"):InvokeServer(unpack(args))
+   wait(1)
+   ReplicatedStorage:WaitForChild("remotes"):WaitForChild("startDungeon"):FireServer()
+end
+
+local function mainLoop()
+   while true do
+       wait(0.1)
+       
+       local currentLevel = getCurrentLevel()
+       local currentPlaceID = game.PlaceId
+       local currentDungeon, currentDifficulty = getDungeonAndDifficultyForLevel(currentLevel)
+       
+       if currentPlaceID == desiredPlaceID then
+           saveCurrentLevel(currentLevel)
+           saveCurrentDungeon(currentDungeon)
+           saveCurrentDifficulty(currentDifficulty)
+           createDungeon(currentDungeon, currentDifficulty)
+       else
+           if shouldTeleportToLobby(currentLevel, currentDungeon, currentDifficulty) then
+               TeleportService:Teleport(desiredPlaceID, player)
+           end
+       end
+   end
+end
+
+spawn(function()
+   while true do
+       local success, error = pcall(mainLoop)
+       if not success then
+           error("Script stopped due to main loop error")
+       end
+   end
+end)
